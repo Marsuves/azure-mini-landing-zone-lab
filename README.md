@@ -22,77 +22,67 @@ Azure Subscription
 │
 └── rg-monitoring-lab
 
-## Skills Practiced
+![VNet and Subnets](screenshots/01-vnet-review-and-subnets.png)
 
-- Azure Resource Groups
-- Azure Virtual Networks
-- Subnetting and CIDR
-- Network Security Groups
-- NSG rule priorities
-- Linux virtual machines
-- Public and private IP addressing
-- Nginx
-- HTTPS/TLS
-- Self-signed certificates
-- Azure RBAC
-- Microsoft Entra security groups
-- Azure Monitor
-- Azure Activity Log
-- Cost management and VM deallocation
+## Network Security
 
-## Network Design
+The web subnet was protected with a Network Security Group allowing HTTPS traffic on TCP 443.
 
-The virtual network uses:
+![Web NSG HTTPS Rule](screenshots/02-web-nsg-https-rule.png)
 
-`10.10.0.0/16`
+## VM Configuration
 
-Subnets:
+The Ubuntu VM was deployed into the web subnet and configured with cost-control and diagnostic settings.
 
-- `snet-web` - `10.10.1.0/24`
-- `snet-app` - `10.10.2.0/24`
-- `snet-management` - `10.10.3.0/24`
+![VM Cost and Diagnostics Settings](screenshots/03-vm-cost-and-diagnostics-settings.png)
 
-The web subnet contains the internet-facing workload.
+![VM Overview](screenshots/04-vm-overview-sanitized.png)
 
-The application subnet allows application traffic from the web subnet over TCP 8080 while denying other unnecessary virtual network traffic.
+## Nginx Web Server
 
-The management subnet is reserved for administrative resources.
+Nginx was installed and validated as an active service.
 
-## Security Design
+![Nginx Running](screenshots/05-nginx-service-running.png)
 
-### Web Tier
+Nginx was then configured to use HTTPS on TCP 443 with a self-signed certificate for lab testing.
 
-The web NSG allows:
+![Nginx HTTPS Configuration](screenshots/06-nginx-https-config.png)
 
-- HTTPS TCP 443
+## Troubleshooting
 
-Public SSH access was intentionally not enabled.
+During testing, the site initially returned a `403 Forbidden` response.
 
-### Application Tier
+This confirmed that the network path was working because the browser successfully reached Nginx. The issue was isolated to the web-server content configuration rather than Azure networking.
 
-The application NSG allows:
+![Nginx 403 Troubleshooting](screenshots/07-nginx-403-troubleshooting.png)
 
-- `10.10.1.0/24` → application subnet on TCP 8080
+After creating the expected `index.html` file, HTTPS was validated locally from the VM.
 
-Other VNet traffic is denied unless explicitly allowed.
+![Local HTTPS Validation](screenshots/08-local-https-validation.png)
 
-## Workload Deployment
+## Successful External Validation
 
-Deployed an Ubuntu Server VM:
+The custom landing-zone webpage was successfully accessed externally over HTTPS through the Azure public IP.
 
-`vm-web-01`
+![Public HTTPS Webpage](screenshots/09-public-https-webpage.png)
 
-Installed Nginx and configured it as an HTTPS web server.
-
-A temporary self-signed TLS certificate was created for the lab.
-
-The final traffic path was:
+Traffic path:
 
 Internet → Azure Public IP → NSG → Web Subnet → Ubuntu VM → Nginx → HTTPS Webpage
 
+## Monitoring
+
+Azure Monitor was used to review host-level CPU metrics.
+
+![Azure Monitor CPU](screenshots/10-azure-monitor-cpu.png)
+
+The Azure Activity Log was used to review management-plane operations such as Run Command and VM updates.
+
+![Azure Activity Log](screenshots/11-azure-activity-log.png)
+
 ## RBAC
 
-Created:
+Created the Microsoft Entra security group:
 
 `Cloud-Lab-Readers`
 
@@ -100,37 +90,24 @@ Assigned the Azure `Reader` role at the `rg-workload-lab` resource-group scope.
 
 This demonstrates least-privilege access by allowing users to view workload resources without modifying them.
 
-## Monitoring
-
-Used Azure Monitor to review:
-
-- Percentage CPU
-- VM health
-- Azure Activity Log
-- Run Command operations
-
-This demonstrated the difference between performance metrics and Azure management-plane events.
-
-## Troubleshooting
-
-Several issues were encountered and resolved during the lab:
-
-- Azure VM family quota limitations
-- VM architecture and size compatibility
-- Incorrect NSG-to-subnet associations
-- Nginx 403 Forbidden response
-- Self-signed TLS certificate warning
-
-The Nginx 403 response showed that network connectivity was working because the request successfully reached the web server.
-
-The issue was resolved by creating the expected `index.html` file.
-
 ## Cost Management
 
-Automatic shutdown was enabled.
+Automatic VM shutdown was enabled.
 
-The virtual machine was manually stopped and deallocated after testing to avoid unnecessary compute charges.
+The VM was manually stopped and deallocated after testing to avoid unnecessary compute charges.
 
 ## Result
 
-Successfully deployed and validated a segmented Azure environment with networking, NSGs, RBAC, monitoring, Linux administration, Nginx, HTTPS, and cost controls.
+Successfully deployed and validated a segmented Azure environment with:
+
+- Resource groups
+- VNet and subnet design
+- Network Security Groups
+- Linux VM deployment
+- Nginx
+- HTTPS/TLS
+- RBAC
+- Azure Monitor
+- Activity Log analysis
+- Troubleshooting
+- Cost management
