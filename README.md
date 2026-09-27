@@ -1,7 +1,14 @@
-Azure Mini Landing Zone Lab
-Project Overview
+The environment uses a segmented `10.10.0.0/16` VNet with dedicated web, application, and management subnets.
+
+![VNet and Subnets](screenshots/01-vnet-review-and-subnets.png)
+
+# Azure Mini Landing Zone Lab
+
+# Project Overview
+
 Built a small Azure landing-zone-style environment to practice core Azure administration, networking, security, RBAC, monitoring, workload deployment, troubleshooting, and cost management.
-Architecture
+
+# Architecture
 ```text
 Azure Subscription
 ├── rg-network-lab
@@ -22,25 +29,32 @@ Azure Subscription
 Network Security
 The web subnet was protected with a Network Security Group allowing HTTPS traffic on TCP 443.
 ![Web NSG HTTPS Rule](screenshots/02-web-nsg-https-rule.png)
+
 The application subnet was configured to allow web-tier traffic on TCP 8080 while denying other unnecessary VNet traffic.
 Public SSH access was intentionally not enabled.
 VM Configuration
 An Ubuntu Server VM named `vm-web-01` was deployed into `snet-web`.
 Cost-control and diagnostic settings were configured, including automatic shutdown and boot diagnostics.
+
 ![VM Cost and Diagnostics](screenshots/03-vm-cost-and-diagnostics-settings.png)
 ![VM Overview](screenshots/04-vm-overview-sanitized.png)
 Nginx Web Server
 Nginx was installed and validated as an active service.
 ![Nginx Running](screenshots/05-nginx-service-running.png)
+
 Nginx was then configured to listen on HTTPS TCP 443 using a temporary self-signed TLS certificate for lab testing.
+
 ![Nginx HTTPS Configuration](screenshots/06-nginx-https-config.png)
-Troubleshooting
+# Troubleshooting: 
 During testing, the site initially returned a `403 Forbidden` response.
 This helped isolate the problem: the request successfully reached Nginx, so the Azure network path was functioning. The issue was with the web content configuration rather than the NSG or public network path.
+
 ![Nginx 403 Troubleshooting](screenshots/07-nginx-403-troubleshooting.png)
 After creating the expected `index.html` file, HTTPS was validated locally from inside the VM.
+
 ![Local HTTPS Validation](screenshots/08-local-https-validation.png)
-Successful External Validation
+# Successful External Validation
+
 The custom landing-zone webpage was successfully accessed externally over HTTPS.
 ![Public HTTPS Webpage](screenshots/09-public-https-webpage.png)
 Validated traffic path:
@@ -59,7 +73,7 @@ Nginx
    ↓
 HTTPS webpage
 ```
-RBAC
+# RBAC
 Created the Microsoft Entra security group:
 `Cloud-Lab-Readers`
 Assigned the Azure `Reader` role at the `rg-workload-lab` resource-group scope.
