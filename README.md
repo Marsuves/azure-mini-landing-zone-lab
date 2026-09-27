@@ -5,9 +5,7 @@
 Built a small Azure landing-zone-style environment to practice core Azure administration, networking, security, RBAC, monitoring, workload deployment, troubleshooting, and cost management.
 
 ## Architecture
-
 Azure Subscription
-
 ├── rg-network-lab
 │   ├── vnet-cloudlab - 10.10.0.0/16
 │   │   ├── snet-web - 10.10.1.0/24
