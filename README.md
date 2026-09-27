@@ -1,7 +1,5 @@
 The environment uses a segmented `10.10.0.0/16` VNet with dedicated web, application, and management subnets.
 
-![VNet and Subnets](screenshots/01-vnet-review-and-subnets.png)
-
 # Azure Mini Landing Zone Lab
 
 # Project Overview
