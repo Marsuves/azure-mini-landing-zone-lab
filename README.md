@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Built a small Azure landing-zone-style environment to practice core Azure administration, networking, security, RBAC, monitoring, workload deployment, troubleshooting, and cost management.
+Built a small Azure landing-zone-style environment for a prospective client to show core Azure administration, networking, security, RBAC, monitoring, workload deployment, troubleshooting, and cost management.
 
 ## Architecture
 Azure Subscription
